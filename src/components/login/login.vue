@@ -24,20 +24,38 @@ export default {
     };
   },
   methods: {
-    handleLogin() {
-      this.$http.post("login", this.formdata).then(res => {
-        var mes = res.data.meta.msg;
-        console.log(res);
-        if (res.data.meta.status == 200) {
-          this.$router.push({ name: "home" });
-          this.$message({
-            message: mes,
-            type: "success"
-          });
-        } else {
-          this.$message.error(mes);
-        }
-      });
+    // handleLogin() {
+    //   this.$http.post("login", this.formdata).then(res => {
+    //     var mes = res.data.meta.msg;
+    //     console.log(res);
+    //     if (res.data.meta.status == 200) {
+    //       this.$router.push({ name: "home" });
+    //       this.$message({
+    //         message: mes,
+    //         type: "success"
+    //       });
+    //     } else {
+    //       this.$message.error(mes);
+    //     }
+    //   });
+    // },
+    //异步aynsc
+    async handleLogin() {
+      const res = await this.$http.post("login", this.formdata);
+      var mes = res.data.meta.msg;
+      console.log(res);
+      if (res.data.meta.status == 200) {
+        //保存token
+        localStorage.setItem("token", res.data.data.token);
+        localStorage.setItem("username", res.data.data.username);
+        this.$router.push({ name: "home" });
+        this.$message({
+          message: mes,
+          type: "success"
+        });
+      } else {
+        this.$message.error(mes);
+      }
     }
   }
 };
