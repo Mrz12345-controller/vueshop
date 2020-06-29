@@ -19,7 +19,55 @@
       </el-row>
     </el-header>
     <el-container>
-      <el-aside class="aside" width="200px">Aside</el-aside>
+      <el-aside class="aside" width="200px">
+        <el-menu :unique-opened="true">
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span slot="title">用户管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="1-1">用户列表</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span slot="title">权限管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="1-1">选项1</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span slot="title">商品管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="1-1">选项1</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="4">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span slot="title">订单管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="1-1">选项1</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="5">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span slot="title">数据统计</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="1-1">数据报表</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+        </el-menu>
+      </el-aside>
       <el-main class="main">Main</el-main>
     </el-container>
   </el-container>
@@ -36,9 +84,20 @@ export default {
     this.username = localStorage.getItem("username");
     console.log(this.username);
   },
+  beforeCreate: function() {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    if (!token) {
+      this.$router.push({ name: "login" });
+    }
+  },
   methods: {
     exit: function() {
       this.$router.push({ name: "login" });
+      this.$message({
+        message: "注销成功",
+        type: "success"
+      });
       localStorage.clear();
     }
   }
