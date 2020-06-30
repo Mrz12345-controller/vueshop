@@ -7,8 +7,8 @@
     </el-breadcrumb>
     <el-row class="row">
       <el-col>
-        <el-input placeholder="请输入内容" v-model="query" class="select">
-          <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input placeholder="请输入内容" v-model="query" class="select" clearable>
+          <el-button @click="search()" slot="append" icon="el-icon-search"></el-button>
         </el-input>
         <el-button type="primary" @click="dialogVisible = true">添加用户</el-button>
       </el-col>
@@ -30,7 +30,14 @@
         <template slot-scope="scope">
           <el-button size="mini" plain type="primary" icon="el-icon-edit" circle></el-button>
           <el-button size="mini" plain type="success" icon="el-icon-check" circle></el-button>
-          <el-button size="mini" plain type="danger" icon="el-icon-delete" circle></el-button>
+          <el-button
+            @click="deleteUser(scope.row.id)"
+            size="mini"
+            plain
+            type="danger"
+            icon="el-icon-delete"
+            circle
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -43,7 +50,7 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
       <el-form :model="format" ref="addUserFormRef" :rules="addUserFormRules" label-width="100px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="format.username"></el-input>
@@ -170,10 +177,39 @@ export default {
       this.getUserList();
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagenum = 1;
+      this.pagesize = val;
+      this.getUserList();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagenum = val;
+      this.getUserList();
+    },
+    search() {
+      this.getUserList();
+    },
+    deleteUser(userId) {
+      this.$confirm("确认删除用户?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const res = await this.$http.delete(`users/${userId}`);
+          if (res.data.meta.status == 200) {
+            this.$message({
+              type: "success",
+              message: res.data.meta.msg
+            });
+            this.getUserList();
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: res.data.meta.msg
+          });
+        });
     }
   }
 };
