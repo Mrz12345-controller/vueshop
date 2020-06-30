@@ -13,21 +13,27 @@
         <el-col :span="4">
           <div class="div3">
             <h3 style="display:inline;">{{username}}</h3>&nbsp&nbsp&nbsp&nbsp
-            <el-button style="display:inline;float:right" @click="exit()" type="primary" plain>注销</el-button>
+            <el-button
+              class="div4"
+              style="display:inline;float:right"
+              @click="exit()"
+              type="primary"
+              plain
+            >注销</el-button>
           </div>
         </el-col>
       </el-row>
     </el-header>
     <el-container>
       <el-aside class="aside" width="200px">
-        <el-menu :unique-opened="true">
+        <el-menu :router="true" :unique-opened="true">
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span slot="title">用户管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">用户列表</el-menu-item>
+              <el-menu-item index="user">用户列表</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="2">
@@ -68,7 +74,9 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main class="main">Main</el-main>
+      <el-main class="main">
+        <router-view />
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -126,5 +134,8 @@ export default {
 .div3 {
   margin-top: 0.5cm;
   text-align: center;
+}
+.div3 .div4 {
+  margin-top: -0.2cm;
 }
 </style>
