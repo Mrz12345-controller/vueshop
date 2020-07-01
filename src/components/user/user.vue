@@ -28,7 +28,14 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" plain type="primary" icon="el-icon-edit" circle></el-button>
+          <el-button
+            @click="openUser(scope.row.id)"
+            size="mini"
+            plain
+            type="primary"
+            icon="el-icon-edit"
+            circle
+          ></el-button>
           <el-button size="mini" plain type="success" icon="el-icon-check" circle></el-button>
           <el-button
             @click="deleteUser(scope.row.id)"
@@ -70,6 +77,28 @@
         <el-button type="primary" @click="addUser()">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="修改用户"
+      :visible.sync="updateDialogVisible"
+      width="50%"
+      :before-close="handleClose"
+    >
+      <el-form :model="update" ref="addUserFormRef" :rules="addUserFormRules" label-width="100px">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="update.username"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="update.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="update.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="updateDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateUser()">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -106,6 +135,7 @@ export default {
         email: "",
         mobile: ""
       },
+      update: {},
       // 用户添加表单验证规则
       addUserFormRules: {
         username: [
@@ -135,7 +165,8 @@ export default {
           { validator: checkMobile, trigger: "blur" }
         ]
       },
-      dialogVisible: false
+      dialogVisible: false,
+      updateDialogVisible: false
     };
   },
   created() {
@@ -210,6 +241,31 @@ export default {
             message: res.data.meta.msg
           });
         });
+    },
+    async openUser(userId) {
+      const res = await this.$http.get("users/" + userId);
+      if (res.data.meta.status != 200) {
+        return this.$message.warning(res.data.meta.msg);
+      }
+      this.update = res.data.data;
+      this.updateDialogVisible = true;
+    },
+    async updateUser() {
+      const res = await this.$http.put(`users/` + this.update.id, {
+        email: this.update.email,
+        mobile: this.update.mobile
+      });
+      console.log(res);
+      if (res.data.meta.status == 200) {
+        this.$message({
+          type: "success",
+          message: res.data.meta.msg
+        });
+        this.getUserList();
+      } else {
+        this.$message.warning(res.data.meta.msg);
+      }
+      this.updateDialogVisible = false;
     }
   }
 };
