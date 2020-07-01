@@ -23,7 +23,12 @@
       </el-table-column>
       <el-table-column label="用户状态">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+          <el-switch
+            v-model="scope.row.mg_state"
+            @change="eitdUser(scope.row.id,scope.row.mg_state)"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          ></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -34,9 +39,17 @@
             plain
             type="primary"
             icon="el-icon-edit"
+            s
             circle
           ></el-button>
-          <el-button size="mini" plain type="success" icon="el-icon-check" circle></el-button>
+          <el-button
+            @click="eitdUsers(scope.row.id)"
+            size="mini"
+            plain
+            type="success"
+            icon="el-icon-check"
+            circle
+          ></el-button>
           <el-button
             @click="deleteUser(scope.row.id)"
             size="mini"
@@ -136,6 +149,7 @@ export default {
         mobile: ""
       },
       update: {},
+      type: false,
       // 用户添加表单验证规则
       addUserFormRules: {
         username: [
@@ -266,6 +280,17 @@ export default {
         this.$message.warning(res.data.meta.msg);
       }
       this.updateDialogVisible = false;
+      g_state;
+    },
+    async eitdUser(id, mg_state) {
+      const res = await this.$http.put(`users/${id}/state/${mg_state}`);
+      console.log(res);
+      if (res.data.meta.status == 200) {
+        mg_state = !mg_state;
+        this.$message.success(res.data.meta.msg);
+      } else {
+        this.$message.warning(res.data.meta.msg);
+      }
     }
   }
 };
