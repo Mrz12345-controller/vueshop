@@ -43,7 +43,7 @@
             circle
           ></el-button>
           <el-button
-            @click="eitdUsers(scope.row.id)"
+            @click="eitdUsers(scope.row)"
             size="mini"
             plain
             type="success"
@@ -96,20 +96,52 @@
       width="50%"
       :before-close="handleClose"
     >
-      <el-form :model="update" ref="addUserFormRef" :rules="addUserFormRules" label-width="100px">
+      <el-form :model="format" ref="addUserFormRef" :rules="addUserFormRules" label-width="100px">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="update.username"></el-input>
+          <el-input v-model="format.username"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="update.email"></el-input>
+          <el-input v-model="format.email"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="mobile">
-          <el-input v-model="update.mobile"></el-input>
+          <el-input v-model="format.mobile"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="updateDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="updateUser()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="配置角色"
+      :visible.sync="dialogVisibleOpen"
+      width="50%"
+      :before-close="handleClose"
+    >
+      <div>
+        <p>当前用户：{{info.username}}</p>
+        <p>当前角色：{{info.role_name}}</p>
+        <p>
+          分配角色：
+          <el-select
+            v-model="selectRoleId"
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请选择文章标签"
+          >
+            <el-option
+              v-for="item in this.shiro"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleOpen = false">取 消</el-button>
+        <el-button type="primary" @click="addUser()">确 定</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -142,14 +174,15 @@ export default {
       pagenum: 1,
       pagesize: 4,
       tableData: [],
+      shiro: [],
       format: {
         username: "",
         password: "",
         email: "",
         mobile: ""
       },
+      selectRoleId: "",
       update: {},
-      type: false,
       // 用户添加表单验证规则
       addUserFormRules: {
         username: [
@@ -180,7 +213,9 @@ export default {
         ]
       },
       dialogVisible: false,
-      updateDialogVisible: false
+      updateDialogVisible: false,
+      dialogVisibleOpen: false,
+      info: {}
     };
   },
   created() {
@@ -287,10 +322,32 @@ export default {
       console.log(res);
       if (res.data.meta.status == 200) {
         mg_state = !mg_state;
+        console.log(mg_state);
         this.$message.success(res.data.meta.msg);
       } else {
         this.$message.warning(res.data.meta.msg);
       }
+    },
+    async eitdUsers(role) {
+      this.info = role;
+      this.dialogVisibleOpen = true;
+      const res = await this.$http.get("roles");
+      this.shiro = res.data.data;
+    },
+    async addUser() {
+      if (!this.info) {
+        return this.$message.warning("请选择文章标签");
+      }
+      const res = await this.$http.put(`users/${this.info.id}/role`, {
+        rid: this.selectRoleId
+      });
+      console.log(res);
+      if (res.data.meta.status != 200) {
+        return this.$message.warning(res.data.meta.msg);
+      }
+      this.$message.success(res.data.meta.msg);
+      this.getUserList();
+      this.dialogVisibleOpen = false;
     }
   }
 };
