@@ -96,15 +96,15 @@
       width="50%"
       :before-close="handleClose"
     >
-      <el-form :model="format" ref="addUserFormRef" :rules="addUserFormRules" label-width="100px">
+      <el-form :model="update" ref="addUserFormRef" :rules="addUserFormRules" label-width="100px">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="format.username"></el-input>
+          <el-input v-model="update.username" disabled></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="format.email"></el-input>
+          <el-input v-model="update.email"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="mobile">
-          <el-input v-model="format.mobile"></el-input>
+          <el-input v-model="update.mobile"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -315,7 +315,6 @@ export default {
         this.$message.warning(res.data.meta.msg);
       }
       this.updateDialogVisible = false;
-      g_state;
     },
     async eitdUser(id, mg_state) {
       const res = await this.$http.put(`users/${id}/state/${mg_state}`);
