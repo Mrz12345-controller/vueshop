@@ -223,8 +223,8 @@ export default {
   },
   methods: {
     async getUserList() {
-      const token = localStorage.getItem("token");
-      this.$http.defaults.headers.common["Authorization"] = token;
+      // const token = localStorage.getItem("token");
+      // this.$http.defaults.headers.common["Authorization"] = token;
       const res = await this.$http.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`
       );

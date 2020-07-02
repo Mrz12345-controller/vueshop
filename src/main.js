@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import ElementUI from "element-ui"
 import 'element-ui/lib/theme-chalk/index.css';
+import myBread from '@/components/custom/myBread.vue';
 import '@/assets/css/reset.css';
 import MyHttpServer from '@/plugins/http.js'
 import moment from 'moment'
@@ -19,7 +20,8 @@ Vue.use(MyHttpServer)
 Vue.filter("fiter", (v) => {
   return moment(v).format("YYYY-MM-DD")
 })
-
+//全局自定义组件
+Vue.component(myBread.name, myBread)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
