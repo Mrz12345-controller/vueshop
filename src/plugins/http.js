@@ -5,7 +5,7 @@ MyHttpServer.install = (Vue) => {
     //设置api前缀
     axios.defaults.baseURL = "http://localhost:8888/api/private/v1/"
     // http request 拦截器
-    //非登陆功能，同意拦截加入token
+    //非登陆功能，统一拦截加入token
     axios.interceptors.request.use(
         config => {
             console.log("触发拦截器");

@@ -141,7 +141,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisibleOpen = false">取 消</el-button>
-        <el-button type="primary" @click="addUser()">确 定</el-button>
+        <el-button type="primary" @click="addUsers()">确 定</el-button>
       </span>
     </el-dialog>
   </el-card>
@@ -333,7 +333,7 @@ export default {
       const res = await this.$http.get("roles");
       this.shiro = res.data.data;
     },
-    async addUser() {
+    async addUsers() {
       if (!this.info) {
         return this.$message.warning("请选择文章标签");
       }
