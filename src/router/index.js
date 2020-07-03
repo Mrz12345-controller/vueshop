@@ -21,17 +21,17 @@ export default new Router({
       children: [
         {
           name: "user",
-          path: "user",
+          path: "users",
           component: User
         },
         {
           name: "right",
-          path: "right",
+          path: "rights",
           component: Right
         },
         {
           name: 'userRight',
-          path: 'userRight',
+          path: 'roles',
           component: UserRight
         }
       ]

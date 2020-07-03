@@ -27,53 +27,15 @@
     <el-container>
       <el-aside class="aside" width="200px">
         <el-menu :router="true" :unique-opened="true">
-          <el-submenu index="1">
+          <el-submenu :index="''+item.order" v-for="(item,index) in dataList" :key="index">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span slot="title">用户管理</span>
+              <span slot="title">{{item.authName}}</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="user">用户列表</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
+            <el-menu-item :index="item1.path" v-for="(item1,index) in item.children" :key="index">
               <i class="el-icon-location"></i>
-              <span slot="title">权限管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="userRight">角色列表</el-menu-item>
-            </el-menu-item-group>
-            <el-menu-item-group>
-              <el-menu-item index="right">权限列表</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="3">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span slot="title">商品管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="4">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span slot="title">订单管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="5">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span slot="title">数据统计</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="1-1">数据报表</el-menu-item>
-            </el-menu-item-group>
+              <span>{{item1.authName}}</span>
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -88,7 +50,8 @@
 export default {
   data() {
     return {
-      username: {}
+      username: {},
+      dataList: []
     };
   },
   mounted: function() {
@@ -102,6 +65,9 @@ export default {
       this.$router.push({ name: "login" });
     }
   },
+  created() {
+    this.menus();
+  },
   methods: {
     exit: function() {
       this.$router.push({ name: "login" });
@@ -110,6 +76,10 @@ export default {
         type: "success"
       });
       localStorage.clear();
+    },
+    async menus() {
+      const res = await this.$http.get("menus");
+      this.dataList = res.data.data;
     }
   }
 };
