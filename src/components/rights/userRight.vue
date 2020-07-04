@@ -7,14 +7,18 @@
         <template slot-scope="scope">
           <el-row class="div1" v-for="(item,index) in scope.row.children" :key="index">
             <el-col :span="4">
-              <el-tag @close="deleteRoles(scope.row,item.id)" type="success">{{item.authName}}</el-tag>
+              <el-tag
+                @close="deleteRoles(scope.row,item.id)"
+                closable
+                type="success"
+              >{{item.authName}}</el-tag>
               <i class="el-icon-arrow-right"></i>
             </el-col>
             <el-col :span="20">
               <el-row v-for="(item1,index) in item.children" :key="index">
                 <el-col :span="4">
                   <el-tag
-                    @close="deleteRoles(scope.row,item2.id)"
+                    @close="deleteRoles(scope.row,item1.id)"
                     closable
                     type="info"
                   >{{item1.authName}}</el-tag>

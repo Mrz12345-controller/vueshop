@@ -27,6 +27,7 @@
     <el-container>
       <el-aside class="aside" width="200px">
         <el-menu :router="true" :unique-opened="true">
+          <!--:index="''+item.order"作用于将item.order的数字转化成字符转-->
           <el-submenu :index="''+item.order" v-for="(item,index) in dataList" :key="index">
             <template slot="title">
               <i class="el-icon-location"></i>
